@@ -1475,43 +1475,48 @@ local function oncharspiderman(char)
     setupwalljumpreset()
 end
 
+local oldIndex
 local grm = getrawmetatable(game)
-local oldindex = grm.__index
-setreadonly(grm, false)
-
-grm.__index = (function(self, key)
-    if not checkcaller() and self == mouse and cfg['silent aimbot']['enabled'] then
-        if key == "Hit" then
-            if cfg['targeting']['mode'] == 'Automatic' then
-                silentaimactive = true
-            end
-
-            if not silentaimactive then return oldindex(self, key) end
-            if not currenttarget then return oldindex(self, key) end
-
-            local char = currenttarget.Parent
-            if not char then return oldindex(self, key) end
-
-            local player = players:GetPlayerFromCharacter(char)
-            if not player then return oldindex(self, key) end
-
-            if playerknocked(player) then return oldindex(self, key) end
-            if not cansee(currenttarget) then return oldindex(self, key) end
-            if not withindistance(currenttarget, cfg['silent aimbot']['distance check']) then return oldindex(self, key) end
-
-            if cfg['silent aimbot']['fov']['enabled'] and not mouseinfovconfig(cfg['silent aimbot']['fov'], currenttarget) then
-                return oldindex(self, key)
-            end
-
-            local targetpart = currenttarget
-            if targetpart then
-                local predpos = predictedpos(targetpart, cfg['silent aimbot'])
-                return CFrame.new(predpos)
+if grm then
+    oldIndex = grm.__index
+    setreadonly(grm, false)
+    
+    grm.__index = function(self, key)
+        if self == mouse and cfg['silent aimbot']['enabled'] then
+            if key == "Hit" then
+                if cfg['targeting']['mode'] == 'Automatic' then
+                    silentaimactive = true
+                end
+                
+                if not silentaimactive then return oldIndex(self, key) end
+                if not currenttarget then return oldIndex(self, key) end
+                
+                local char = currenttarget.Parent
+                if not char then return oldIndex(self, key) end
+                
+                local player = players:GetPlayerFromCharacter(char)
+                if not player then return oldIndex(self, key) end
+                
+                if playerknocked(player) then return oldIndex(self, key) end
+                if not cansee(currenttarget) then return oldIndex(self, key) end
+                if not withindistance(currenttarget, cfg['silent aimbot']['distance check']) then return oldIndex(self, key) end
+                
+                if cfg['silent aimbot']['fov']['enabled'] and not mouseinfovconfig(cfg['silent aimbot']['fov'], currenttarget) then
+                    return oldIndex(self, key)
+                end
+                
+                local targetpart = currenttarget
+                if targetpart then
+                    local predpos = predictedpos(targetpart, cfg['silent aimbot'])
+                    return CFrame.new(predpos)
+                end
             end
         end
+        return oldIndex(self, key)
     end
-    return oldindex(self, key)
-end)
+    
+    setreadonly(grm, true)
+end
 
 local oldrandom
 oldrandom = hookfunction(math.random, (function(...)
