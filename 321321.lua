@@ -1473,9 +1473,6 @@ local function oncharspiderman(char)
     setupwalljumpreset()
 end
 
--- Replace the silent aimbot metatable section (around line 948-995) with this:
-
--- ============ METATABLE HOOKS (MOVE TO BOTTOM) ============
 local oldIndex
 local grm = getrawmetatable(game)
 if grm then
@@ -1509,18 +1506,7 @@ if grm then
                 local targetpart = currenttarget
                 if targetpart then
                     local predpos = predictedpos(targetpart, cfg['silent aimbot'])
-                    
-                    local spread = 0.5
-                    local randomSpread = Vector3.new(
-                        (math.random() - 0.5) * spread,
-                        (math.random() - 0.5) * spread,
-                        (math.random() - 0.5) * spread
-                    )
-                    
-                    local hitCFrame = CFrame.new(predpos + randomSpread)
-                    task.wait(math.random(1, 5) / 1000)
-                    
-                    return hitCFrame
+                    return CFrame.new(predpos)
                 end
             end
         end
@@ -1530,6 +1516,7 @@ if grm then
     setreadonly(grm, true)
 end
 
+-- For the random hook, replace with:
 local oldrandom = math.random
 math.random = function(...)
     local args = {...}
@@ -1561,7 +1548,12 @@ math.random = function(...)
     
     return oldrandom(...)
 end
--- ============ END METATABLE HOOKS ============
+
+-- For the RenderStepped connection, replace LPH_NO_VIRTUALIZE with a standard function:
+runservice.RenderStepped:Connect(function(dt)
+    -- Your existing RenderStepped code here (the entire function body)
+    -- Just remove the LPH_NO_VIRTUALIZE wrapper
+end)
 
 local function addesp(player)
     if player == localplayer then return end
