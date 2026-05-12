@@ -1479,7 +1479,7 @@ local grm = getrawmetatable(game)
 local oldindex = grm.__index
 setreadonly(grm, false)
 
-grm.__index = LPH_NO_VIRTUALIZE(function(self, key)
+grm.__index = (function(self, key)
     if not checkcaller() and self == mouse and cfg['silent aimbot']['enabled'] then
         if key == "Hit" then
             if cfg['targeting']['mode'] == 'Automatic' then
@@ -1514,7 +1514,7 @@ grm.__index = LPH_NO_VIRTUALIZE(function(self, key)
 end)
 
 local oldrandom
-oldrandom = hookfunction(math.random, LPH_NO_VIRTUALIZE(function(...)
+oldrandom = hookfunction(math.random, (function(...)
     local args = {...}
     if checkcaller() then
         return oldrandom(...)
@@ -1830,7 +1830,7 @@ uis.InputEnded:Connect(function(input, processed)
     end
 end)
 
-runservice.RenderStepped:Connect(LPH_NO_VIRTUALIZE(function(dt)
+runservice.RenderStepped:Connect((function(dt)
     if cfg['targeting']['mode'] == 'Automatic' then
         local now = tick()
         if now - lasttargetscan >= scanrate then
