@@ -156,7 +156,7 @@ shared.Glory = {
     },
 
     ['speed modifications'] = {
-        ['enabled'] = true,
+        ['enabled'] = false,
         ['multiplier'] = 35,
     },
 
@@ -179,7 +179,7 @@ shared.Glory = {
     },
 
     ['headless'] = {
-        ['enabled'] = true,
+        ['enabled'] = false,
         ['remove face accessories'] = true,
     },
 }
