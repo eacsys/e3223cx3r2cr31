@@ -1475,6 +1475,7 @@ end
 
 -- Replace the silent aimbot metatable section (around line 948-995) with this:
 
+-- ============ METATABLE HOOKS (MOVE TO BOTTOM) ============
 local oldIndex
 local grm = getrawmetatable(game)
 if grm then
@@ -1509,7 +1510,6 @@ if grm then
                 if targetpart then
                     local predpos = predictedpos(targetpart, cfg['silent aimbot'])
                     
-                    -- Add random spread to avoid detection
                     local spread = 0.5
                     local randomSpread = Vector3.new(
                         (math.random() - 0.5) * spread,
@@ -1517,10 +1517,7 @@ if grm then
                         (math.random() - 0.5) * spread
                     )
                     
-                    -- Return the hit position with spread to look more natural
                     local hitCFrame = CFrame.new(predpos + randomSpread)
-                    
-                    -- Add small delay to avoid rapid detection
                     task.wait(math.random(1, 5) / 1000)
                     
                     return hitCFrame
@@ -1533,7 +1530,6 @@ if grm then
     setreadonly(grm, true)
 end
 
--- Also fix the random hook (remove checkcaller):
 local oldrandom = math.random
 math.random = function(...)
     local args = {...}
@@ -1565,6 +1561,7 @@ math.random = function(...)
     
     return oldrandom(...)
 end
+-- ============ END METATABLE HOOKS ============
 
 local function addesp(player)
     if player == localplayer then return end
