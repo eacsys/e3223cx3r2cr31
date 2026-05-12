@@ -134,7 +134,7 @@ shared.Glory = {
     },
 
     ['rapid fire'] = {
-        ['enabled'] = true,
+        ['enabled'] = false,
         ['delay'] = 0.01,
         ['specific weapons'] = {
             ['enabled'] = true,
