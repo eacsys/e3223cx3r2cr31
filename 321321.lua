@@ -1916,8 +1916,3 @@ runservice.RenderStepped:Connect((function(dt)
         applycamlock()
     end
 end))
-
-
-print(oldindex)
-print(predictedpos)
-print(cansee)
