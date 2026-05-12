@@ -117,7 +117,7 @@ shared.Glory = {
     },
 
     ['spread modifications'] = {
-        ['enabled'] = true,
+        ['enabled'] = false,
         ['amount'] = 1, -- 1-100
         ['specific weapons'] = {
             ['enabled'] = false,
@@ -137,7 +137,7 @@ shared.Glory = {
         ['enabled'] = false,
         ['delay'] = 0.01,
         ['specific weapons'] = {
-            ['enabled'] = true,
+            ['enabled'] = false,
             ['weapons'] = {
                 '[Revolver]',
             },
@@ -169,7 +169,7 @@ shared.Glory = {
     },
 
     ['skins'] = {
-        ['enabled'] = true,
+        ['enabled'] = false,
         ['weapons'] = {
             ['[Double-Barrel SG]'] = "Golden Age",
             ['[Revolver]'] = "Golden Age",
