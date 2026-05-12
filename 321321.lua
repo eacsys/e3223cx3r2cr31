@@ -139,8 +139,6 @@ shared.Glory = {
         ['specific weapons'] = {
             ['enabled'] = true,
             ['weapons'] = {
-                '[TacticalShotgun]',
-                '[Double-Barrel SG]',
                 '[Revolver]',
             },
         },
