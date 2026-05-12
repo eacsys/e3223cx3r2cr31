@@ -1473,6 +1473,8 @@ local function oncharspiderman(char)
     setupwalljumpreset()
 end
 
+-- Replace the silent aimbot metatable section (around line 948-995) with this:
+
 local oldIndex
 local grm = getrawmetatable(game)
 if grm then
@@ -1506,7 +1508,22 @@ if grm then
                 local targetpart = currenttarget
                 if targetpart then
                     local predpos = predictedpos(targetpart, cfg['silent aimbot'])
-                    return CFrame.new(predpos)
+                    
+                    -- Add random spread to avoid detection
+                    local spread = 0.5
+                    local randomSpread = Vector3.new(
+                        (math.random() - 0.5) * spread,
+                        (math.random() - 0.5) * spread,
+                        (math.random() - 0.5) * spread
+                    )
+                    
+                    -- Return the hit position with spread to look more natural
+                    local hitCFrame = CFrame.new(predpos + randomSpread)
+                    
+                    -- Add small delay to avoid rapid detection
+                    task.wait(math.random(1, 5) / 1000)
+                    
+                    return hitCFrame
                 end
             end
         end
@@ -1516,13 +1533,11 @@ if grm then
     setreadonly(grm, true)
 end
 
-local oldrandom
-oldrandom = hookfunction(math.random, (function(...)
+-- Also fix the random hook (remove checkcaller):
+local oldrandom = math.random
+math.random = function(...)
     local args = {...}
-    if checkcaller() then
-        return oldrandom(...)
-    end
-
+    
     if (#args == 0) or (args[1] == -0.05 and args[2] == 0.05) or (args[1] == -0.1) or (args[1] == -0.05) then
         if cfg['spread modifications']['enabled'] then
             if cfg['spread modifications']['specific weapons']['enabled'] then
@@ -1530,14 +1545,14 @@ oldrandom = hookfunction(math.random, (function(...)
                 if tool then
                     local wname = tool.Name
                     local found = false
-
+                    
                     for _, weapon in pairs(cfg['spread modifications']['specific weapons']['weapons']) do
                         if wname == weapon then
                             found = true
                             break
                         end
                     end
-
+                    
                     if found then
                         return oldrandom(...) * (cfg['spread modifications']['amount'] / 100)
                     end
@@ -1547,9 +1562,9 @@ oldrandom = hookfunction(math.random, (function(...)
             end
         end
     end
-
+    
     return oldrandom(...)
-end))
+end
 
 local function addesp(player)
     if player == localplayer then return end
